@@ -855,6 +855,13 @@ class NodeRestApi {
 				};
 			}
 		});
+		if (usage.peer && usage.peer.storage) {
+			data.storage = {
+				peer: {
+					size: usage.peer.storage + 'Gi',
+				},
+			};
+		}
 		return RestApi.put(`/api/v3/kubernetes/components/${node.id}`, data);
 	}
 

@@ -74,6 +74,7 @@ class UsageForm extends Component {
 	getFields(type) {
 		const fields = [];
 		let usageDefaults = UsageForm.getUsageDefaults();
+		const storageReadonly = this.props.type === 'peer' ? false : !!this.props.reallocate;
 		if (this.props.type !== 'leveldb') {
 			fields.push({
 				name: 'cpu',
@@ -111,7 +112,7 @@ class UsageForm extends Component {
 						validate: Helper.isPositiveNumber,
 						validationErrorMsg: 'input_error_invalid_number',
 						default: this.props.reallocate ? this.props.reallocate.storage : usageDefaults[this.props.type].storage,
-						readonly: this.props.reallocate ? true : false,
+						readonly: storageReadonly,
 					});
 				}
 				break;
@@ -124,7 +125,7 @@ class UsageForm extends Component {
 					validate: Helper.isPositiveNumber,
 					validationErrorMsg: 'input_error_invalid_number',
 					default: this.props.reallocate ? this.props.reallocate.storage : usageDefaults[this.props.type].storage,
-					readonly: this.props.reallocate ? true : false,
+					readonly: storageReadonly,
 				});
 				break;
 			case 'fluentd':

@@ -3,8 +3,8 @@
 SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # Where the script lives
 
 function networkUp() {
-	docker compose -f ${SRC_DIR}/../docker/docker-compose-console.yaml up -d
-	docker compose -f ${SRC_DIR}/../docker/docker-compose-grpc-web.yaml up -d
+	docker-compose -f ${SRC_DIR}/../docker/docker-compose-console.yaml up -d
+	docker-compose -f ${SRC_DIR}/../docker/docker-compose-grpc-web.yaml up -d
 }
 
 function networkDown() {
