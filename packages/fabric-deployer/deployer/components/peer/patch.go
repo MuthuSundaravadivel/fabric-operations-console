@@ -65,6 +65,8 @@ func (p *Peer) patchCR(section, compName, namespace, sID string, body []byte) er
 	switch section {
 	case RESOURCES:
 		p.patchResources(originalCR, request.Resources)
+	case STORAGE:
+		p.patchStorage(originalCR, request.Storage)
 	case CONFIG:
 		p.patchConfig(originalCR, request.ConfigOverride)
 	case CRYPTO:
@@ -110,6 +112,40 @@ func (p *Peer) patchResources(originalCR *current.IBPPeer, resources *current.Pe
 
 	p.Logger.Debugf("Patching resources for '%s' to %+v", originalCR.Name, resources)
 	originalCR.Spec.Resources = resources
+}
+
+func (p *Peer) patchStorage(originalCR *current.IBPPeer, storage *current.PeerStorages) {
+	if storage == nil {
+		return
+	}
+
+	if originalCR.Spec.Storage == nil {
+		originalCR.Spec.Storage = &current.PeerStorages{}
+	}
+
+	if storage.Peer != nil {
+		if originalCR.Spec.Storage.Peer == nil {
+			originalCR.Spec.Storage.Peer = &current.StorageSpec{}
+		}
+		if storage.Peer.Size != "" {
+			originalCR.Spec.Storage.Peer.Size = storage.Peer.Size
+		}
+		if storage.Peer.Class != "" {
+			originalCR.Spec.Storage.Peer.Class = storage.Peer.Class
+		}
+	}
+
+	if storage.StateDB != nil {
+		if originalCR.Spec.Storage.StateDB == nil {
+			originalCR.Spec.Storage.StateDB = &current.StorageSpec{}
+		}
+		if storage.StateDB.Size != "" {
+			originalCR.Spec.Storage.StateDB.Size = storage.StateDB.Size
+		}
+		if storage.StateDB.Class != "" {
+			originalCR.Spec.Storage.StateDB.Class = storage.StateDB.Class
+		}
+	}
 }
 
 func (p *Peer) patchConfig(originalCR *current.IBPPeer, config *runtime.RawExtension) {
@@ -194,6 +230,7 @@ func (p *Peer) patchActions(originalCR *current.IBPPeer, actions *current.PeerAc
 
 func (p *Peer) patchAll(originalCR *current.IBPPeer, request *api.UpdateRequest) error {
 	p.patchResources(originalCR, request.Resources)
+	p.patchStorage(originalCR, request.Storage)
 	p.patchConfig(originalCR, request.ConfigOverride)
 	p.patchCrypto(originalCR, request.Config)
 	p.patchNodeOU(originalCR, request.NodeOU)

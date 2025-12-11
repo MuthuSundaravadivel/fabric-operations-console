@@ -429,5 +429,36 @@ var _ = Describe("Patch API", func() {
 				})
 			})
 		})
+
+		Context("storage", func() {
+			BeforeEach(func() {
+				request := &api.UpdateRequest{
+					Storage: &current.PeerStorages{
+						Peer: &current.StorageSpec{
+							Size: "5Gi",
+						},
+						StateDB: &current.StorageSpec{
+							Size: "10Gi",
+						},
+					},
+				}
+				body, err = json.Marshal(request)
+				Expect(err).NotTo(HaveOccurred())
+			})
+
+			It("updates storage sizes only", func() {
+				_, code, err := peerComp.PatchCR(peer.STORAGE, "peer1", "namespace", "testSID", body)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(code).To(Equal(200))
+
+				cr := &current.IBPPeer{}
+				_, _, _, crBytes := client.PatchCRArgsForCall(0)
+				err = json.Unmarshal(crBytes, cr)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(cr.Spec.Storage.Peer.Size).To(Equal("5Gi"))
+				Expect(cr.Spec.Storage.Peer.Class).To(Equal("default"))
+				Expect(cr.Spec.Storage.StateDB.Size).To(Equal("10Gi"))
+			})
+		})
 	})
 })

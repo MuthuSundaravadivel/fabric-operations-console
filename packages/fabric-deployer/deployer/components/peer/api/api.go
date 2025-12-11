@@ -51,6 +51,7 @@ type UpdateRequest struct {
 	Config         *current.SecretSpec    `json:"crypto,omitempty"`
 	AdminCerts     []string               `json:"admincerts,omitempty"`
 	Resources      *current.PeerResources `json:"resources,omitempty"`
+	Storage        *current.PeerStorages  `json:"storage,omitempty"`
 	ConfigOverride *runtime.RawExtension  `json:"configoverride,omitempty"`
 	HSM            *current.HSM           `json:"hsm,omitempty"` // DEPRECATED
 	NodeOU         *NodeOU                `json:"nodeou,omitempty"`
