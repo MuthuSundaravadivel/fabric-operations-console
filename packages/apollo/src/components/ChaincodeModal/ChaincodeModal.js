@@ -156,13 +156,17 @@ export class ChaincodeModal extends React.Component {
 		let readiness = null;
 		let commited_approvals = [];
 		if (this.props.signature_requests) {
+			Log.debug("The Props signature_request",this.props.signature_requests)
 			this.props.signature_requests.forEach(request => {
+				Log.debug("The signature_request",request.ccd.chaincode_sequence+"=="+this.props.ccd.chaincode_sequence+"=="+request.ccd.chaincode_id+"==="+this.props.ccd.chaincode_id+"=="+request.channel+"==="+channel.id+"===="+request.ccd.chaincode_version+"====="+this.props.ccd.chaincode_version)
 				if (
 					request.ccd &&
 					request.ccd.chaincode_sequence === this.props.ccd.chaincode_sequence &&
 					request.ccd.chaincode_id === this.props.ccd.chaincode_id &&
-					request.channel === channel.id
+					request.channel === channel.id &&
+					request.ccd.chaincode_version === this.props.ccd.chaincode_version
 				) {
+					Log.debug("If Condition Passed",request)
 					signatureRequest = request;
 				}
 			});
