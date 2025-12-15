@@ -168,6 +168,7 @@ export class ChaincodeModal extends React.Component {
 				) {
 					Log.debug("If Condition Passed",request)
 					signatureRequest = request;
+					Log.debug("SignatureRequest Struct", request)
 				}
 			});
 		}
